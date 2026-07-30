@@ -359,6 +359,7 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, #level=logging.DEBUG,
                         format="%(levelname)-8s %(message)s",
                         stream=sys.stdout)
+    logging.getLogger().setLevel(logging.INFO)
 
     validate_input(args)
 
