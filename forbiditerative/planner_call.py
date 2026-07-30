@@ -43,7 +43,9 @@ class PlannerCall(object):
             return [ os.path.abspath("{sas_file}".format(**kwargs)) ]
         else:
             translator_options = ["--translate-options", "--case-sensitive", "--search-options"] if 'case_sensitive' in kwargs else []
-            return ["--transform-task", "preprocess", os.path.abspath("{domain_file}".format(**kwargs)), os.path.abspath("{problem_file}".format(**kwargs))] + translator_options
+            return [
+                # "--transform-task", "preprocess",
+                os.path.abspath("{domain_file}".format(**kwargs)), os.path.abspath("{problem_file}".format(**kwargs))] + translator_options
 
 
 class ReformulationPlannerCall(PlannerCall):
@@ -116,11 +118,11 @@ class DiverseReformulationPlannerCall(ReformulationPlannerCall):
             return ["--symmetries",
                 "sym=structural_symmetries(time_bound=0,search_symmetries=dks, \
                 stabilize_initial_state=true, keep_operator_symmetries=true)",
-                "--search", "forbid_iterative(reformulate = FORBID_SINGLE_PLAN_MULTISET, \
+                "--search", "forbid_iterative(reformulate = FORBID_MULTIPLE_PLAN_SUPERMULTISETS, \
                 extend_plans_with_symmetry=sym, dump=false, change_operator_names=false, number_of_plans={num_total_plans}, \
                 number_of_plans_to_read={num_plans_to_read}, external_plans_path={external_plans_path})".format(**kwargs)]
         else:
-            return ["--search", "forbid_iterative(reformulate = FORBID_SINGLE_PLAN_MULTISET, \
+            return ["--search", "forbid_iterative(reformulate = FORBID_MULTIPLE_PLAN_SUPERMULTISETS, \
                 dump=false, change_operator_names=false, number_of_plans={num_total_plans}, \
                 number_of_plans_to_read={num_plans_to_read}, external_plans_path={external_plans_path})".format(**kwargs)]
 
