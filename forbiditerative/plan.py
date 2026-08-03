@@ -34,8 +34,10 @@ def get_planner(args):
         return planners.TopKViaUnorderedTopQualityPlanner(args)
     if args.planner == "topq_via_unordered_topq":
         return planners.TopQualityViaUnorderedTopQualityPlanner(args)
-    if args.planner == "diverse": 
+    if args.planner == "diverse":
         return planners.DiversePlanner(args)
+    if args.planner == "diverse_lama":
+        return planners.DiverseLamaPlanner(args)
     ##
     logging.error("Wrong planner definition")
 
@@ -248,10 +250,10 @@ def validate_input(args):
         exit(1)
 
     if not args.planner:
-        logging.error("Required parameters --planner PLANNER (topk, unordered_topq, extended_unordered_topq, topq_via_topk, topk_via_unordered_topq, topq_via_unordered_topq, or diverse)")
+        logging.error("Required parameters --planner PLANNER (topk, unordered_topq, extended_unordered_topq, topq_via_topk, topk_via_unordered_topq, topq_via_unordered_topq, diverse, or diverse_lama)")
         exit(1)
 
-    if args.planner in ["topk", "topk_via_unordered_topq", "diverse", "extended_unordered_topq"] and not args.number_of_plans:
+    if args.planner in ["topk", "topk_via_unordered_topq", "diverse", "diverse_lama", "extended_unordered_topq"] and not args.number_of_plans:
         logging.error("Required parameter --number-of-plans NUMBER_OF_PLANS")
         exit(1)
     if args.planner in ["unordered_topq", "subsets_topq", "submultisets_topq",  "extended_unordered_topq", "topq_via_topk", "topq_via_unordered_topq"] and not args.quality_bound:
@@ -331,7 +333,7 @@ if __name__ == "__main__":
                                         "this path does not exist, it tries the directory "
                                         "'<repo>/builds/BUILD/bin', where the build script creates "
                                         "them by default.")
-    parser.add_argument("--planner", help="The type of planner", choices=["topk", "topk_via_unordered_topq", "unordered_topq",  "extended_unordered_topq", "topq_via_topk", "topq_via_unordered_topq", "subsets_topq", "submultisets_topq", "diverse"])
+    parser.add_argument("--planner", help="The type of planner", choices=["topk", "topk_via_unordered_topq", "unordered_topq",  "extended_unordered_topq", "topq_via_topk", "topq_via_unordered_topq", "subsets_topq", "submultisets_topq", "diverse", "diverse_lama"])
     parser.add_argument("--domain", help="PDDL domain file")
     parser.add_argument("--problem", help="PDDL problem file")
     parser.add_argument("--sas-file", help="SAS+ problem file")

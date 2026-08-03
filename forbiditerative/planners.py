@@ -98,6 +98,10 @@ def plan_diverse_agl(domain_file : Path, problem_file : Path, number_of_plans_bo
     planner_args = ["--planner", "diverse", "--domain", str(domain_file.absolute()), "--problem", str(problem_file.absolute()), "--number-of-plans", str(number_of_plans_bound)]
     return run_planner(extend_args(planner_args, timeout, suppress_planner_output))
 
+def plan_diverse_lama(domain_file : Path, problem_file : Path, number_of_plans_bound : int, timeout: Optional[int] = None, suppress_planner_output : Optional[bool] = True) -> dict:
+    planner_args = ["--planner", "diverse_lama", "--domain", str(domain_file.absolute()), "--problem", str(problem_file.absolute()), "--number-of-plans", str(number_of_plans_bound)]
+    return run_planner(extend_args(planner_args, timeout, suppress_planner_output))
+
 def extend_args(planner_args, timeout: Optional[int] = None, suppress_planner_output : Optional[bool] = True):
     planner_args.extend(["--symmetries", "--use-local-folder", "--clean-local-folder", "--plans-as-json"])
     if suppress_planner_output:

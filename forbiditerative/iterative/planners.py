@@ -738,3 +738,7 @@ class DiversePlanner(Planner):
 
     def enough_plans_found(self, plan_manager):
         return self._enough_plans_found(plan_manager, up_to_best_known_bound=False)
+
+class DiverseLamaPlanner(DiversePlanner):
+    def get_planner_call(self):
+        return planner_call.BaseSatisficingPlannerCall()
