@@ -357,11 +357,17 @@ if __name__ == "__main__":
     parser.add_argument("--case-sensitive", action="store_true", help="treat the input PDDL as case sensitive")
      
     args = parser.parse_args()
+    # debugging: print args:
+    for key, value in vars(args).items():
+        print(f"{key:20s} = {value}")
 
     logging.basicConfig(level=logging.INFO, #level=logging.DEBUG,
                         format="%(levelname)-8s %(message)s",
                         stream=sys.stdout)
     logging.getLogger().setLevel(logging.INFO)
+
+    print(f"{__file__}: Log level is {logging.getLevelName(logging.getLogger().getEffectiveLevel())}")
+
 
     validate_input(args)
 

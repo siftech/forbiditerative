@@ -16,6 +16,7 @@ def main():
     logging.basicConfig(level=getattr(logging, args.log_level.upper()),
                         format="%(levelname)-8s %(message)s",
                         stream=sys.stdout)
+    print(f"Log level is {logging.getLevelName(logging.getLogger().getEffectiveLevel())}")
     logging.debug("processed args: %s" % args)
 
     if args.version:
