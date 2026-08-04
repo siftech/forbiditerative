@@ -1,5 +1,6 @@
 #include "plan_manager.h"
 
+#include "state_registry.h"
 #include "task_proxy.h"
 
 #include "task_utils/task_properties.h"
@@ -39,9 +40,40 @@ void PlanManager::set_is_part_of_anytime_portfolio(bool is_part_of_anytime_portf
     is_part_of_anytime_portfolio = is_part_of_anytime_portfolio_;
 }
 
+static bool validate_plan_for_save(const Plan &plan, const TaskProxy &task_proxy,
+                                   const std::string &source) {
+    StateRegistry registry(task_proxy);
+    State current_state = registry.get_initial_state();
+    OperatorsProxy operators = task_proxy.get_operators();
+    for (size_t i = 0; i < plan.size(); ++i) {
+        OperatorProxy op = operators[plan[i]];
+        if (!task_properties::is_applicable(op, current_state)) {
+            cerr << "Plan validation failed at step " << (i + 1)
+                 << ": operator \"" << op.get_name()
+                 << "\" has unsatisfied preconditions";
+            if (!source.empty())
+                cerr << " [source: " << source << "]";
+            cerr << endl;
+            return false;
+        }
+        current_state = registry.get_successor_state(current_state, op);
+    }
+    if (!task_properties::is_goal_state(task_proxy, current_state)) {
+        cerr << "Plan validation failed: final state is not a goal state";
+        if (!source.empty())
+            cerr << " [source: " << source << "]";
+        cerr << endl;
+        return false;
+    }
+    return true;
+}
+
 void PlanManager::save_plan(
     const Plan &plan, const TaskProxy &task_proxy,
-    bool generates_multiple_plan_files) {
+    bool generates_multiple_plan_files, const std::string &source) {
+    if (!validate_plan_for_save(plan, task_proxy, source)) {
+        return;
+    }
     ostringstream filename;
     filename << plan_filename;
     int plan_number = num_previously_generated_plans + 1;

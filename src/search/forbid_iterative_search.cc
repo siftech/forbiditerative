@@ -397,9 +397,9 @@ void ForbidIterativeSearch::reformulate_and_dump_multiset(const char* filename, 
     //utils::g_log << "=========================================================================" << endl;
 
     if (dumping_plans_files) {
-        utils::g_log << "Dumping " << current_plans.size() << " plans before reformulation " << endl;    
+        utils::g_log << "Dumping " << current_plans.size() << " plans before reformulation " << endl;
         for (const Plan& plan : current_plans) {
-            plan_manager.save_plan(plan, task_proxy, true);
+            plan_manager.save_plan(plan, task_proxy, true, "forbid_iterative_multiset");
         }
         utils::g_log << "Done dumping plans before reformulation" << endl;
     }
@@ -523,7 +523,7 @@ void ForbidIterativeSearch::reformulate_and_dump_superset(const char* filename, 
     cout << "Dumping " << current_plans.size() << " plans before reformulation " << endl;
     if (dumping_plans_files) {
         for (const Plan& plan : current_plans) {
-            plan_manager.save_plan(plan, task_proxy, true);
+            plan_manager.save_plan(plan, task_proxy, true, "forbid_iterative_superset");
         }
     }
     cout << "done! [t=" << utils::g_timer << "]" << endl;
