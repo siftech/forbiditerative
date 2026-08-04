@@ -847,7 +847,7 @@ void PlansGraph::dump_plans(PlanManager& plan_manager, size_t number_of_plans) {
 	find_plans_dfs(plan_manager, number_of_plans);
 	utils::g_log << "Dumped " << optimal_plans.size() << (optimal ? " optimal ": " ") << "plans for this iteration, found additional " << non_optimal_plans.size() << " plans. [t=" << utils::g_timer << "]" << endl;
 	for (const Plan& plan : non_optimal_plans) {
-		plan_manager.save_plan(plan, task_proxy, true, "plans_graph_non_optimal");
+		plan_manager.save_plan(plan, task_proxy, true);
 	}
 }
 
@@ -881,7 +881,7 @@ void PlansGraph::find_plans_dfs(PlanManager& plan_manager, size_t number_of_plan
 			if (!optimal || node->plan_cost == best_plan_cost) {
 			    std::pair<PlansSet::iterator, bool > result = optimal_plans.insert(current_plan);
 			    if (result.second) {
-			        plan_manager.save_plan(current_plan, task_proxy, true, "plans_graph_dfs");
+			        plan_manager.save_plan(current_plan, task_proxy, true);
 					//utils::g_log << "Plan cost: " << best_plan_cost << endl;
 			    }
 			} else {
@@ -1050,7 +1050,7 @@ void PlansGraph::dump_reordering_plans_dfs_naive_no_duplicate_detection(PlanMana
 			    std::pair<PlansSet::iterator, bool > result = optimal_plans.insert(curr_plan);
 			    if (result.second) {
     				utils::g_log << "Unique plan, dumping" << endl;
-			        plan_manager.save_plan(curr_plan, task_proxy, true, "plans_graph_reorder_dfs");
+			        plan_manager.save_plan(curr_plan, task_proxy, true);
     				found_plans.push_back(curr_plan);
     				num_found_plans++;
 			    }

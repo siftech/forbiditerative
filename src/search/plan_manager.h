@@ -6,7 +6,6 @@
 #include <unordered_map>
 
 class OperatorID;
-class StateRegistry;
 class TaskProxy;
 
 using Plan = std::vector<OperatorID>;
@@ -28,8 +27,7 @@ public:
     */
     void save_plan(
         const Plan &plan, const TaskProxy &task_proxy,
-        bool generates_multiple_plan_files = false,
-        const std::string &source = "");
+        bool generates_multiple_plan_files = false);
 
 
     void load_plan(std::string path_to_plan_file, Plan &plan, const TaskProxy &task_proxy) const;
