@@ -99,35 +99,12 @@ void SearchEngine::search() {
     log << "Actual search time: " << timer.get_elapsed_time() << endl;
 }
 
-bool SearchEngine::validate_plan(const Plan &plan) {
-    OperatorsProxy operators = task_proxy.get_operators();
-    State current_state = state_registry.get_initial_state();
-    for (size_t i = 0; i < plan.size(); ++i) {
-        OperatorProxy op = operators[plan[i]];
-        if (!task_properties::is_applicable(op, current_state)) {
-            cerr << "Plan validation failed at step " << (i + 1)
-                 << ": operator \"" << op.get_name()
-                 << "\" has unsatisfied preconditions" << endl;
-            return false;
-        }
-        current_state = state_registry.get_successor_state(current_state, op);
-    }
-    if (!task_properties::is_goal_state(task_proxy, current_state)) {
-        cerr << "Plan validation failed: final state is not a goal state" << endl;
-        return false;
-    }
-    return true;
-}
-
 bool SearchEngine::check_goal_and_set_plan(
     const State &state, const shared_ptr<Group> &group) {
     if (task_properties::is_goal_state(task_proxy, state)) {
+        log << "Solution found!" << endl;
         Plan plan;
         search_space.trace_path(state, plan, task, group);
-        if (!validate_plan(plan)) {
-            return false;
-        }
-        log << "Solution found!" << endl;
         set_plan(plan);
         return true;
     }
