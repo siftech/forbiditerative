@@ -3,6 +3,8 @@
 import sys, json
 import subprocess
 import logging
+import tempfile
+
 from subprocess import SubprocessError
 from pathlib import Path
 from typing import List, Literal, Optional
@@ -18,7 +20,6 @@ default_landmark_method = 'rhw'
 
 def run_planner(planner_args) -> dict:
     try:
-        import tempfile
         with tempfile.NamedTemporaryFile() as result_file:
             out = subprocess.run([sys.executable, "-B", "-m", "forbiditerative.plan"] + default_build_args + planner_args + ["--results-file", str(result_file.name)], 
                            stdout = subprocess.PIPE, stderr = subprocess.PIPE)
@@ -100,6 +101,13 @@ def plan_diverse_agl(domain_file : Path, problem_file : Path, number_of_plans_bo
 
 def plan_diverse_lama(domain_file : Path, problem_file : Path, number_of_plans_bound : int, timeout: Optional[int] = None, suppress_planner_output : Optional[bool] = True) -> dict:
     planner_args = ["--planner", "diverse_lama", "--domain", str(domain_file.absolute()), "--problem", str(problem_file.absolute()), "--number-of-plans", str(number_of_plans_bound)]
+    return run_planner(extend_args(planner_args, timeout, suppress_planner_output))
+
+def plan_external(domain_file : Path, problem_file : Path, planner_binary : str, planner_args_template : str, number_of_plans_bound : int, timeout: Optional[int] = None, suppress_planner_output : Optional[bool] = True) -> dict:
+    planner_args = ["--planner", "external", "--domain", str(domain_file.absolute()), "--problem", str(problem_file.absolute()),
+                    "--number-of-plans", str(number_of_plans_bound),
+                    "--external-planner", planner_binary,
+                    "--external-planner-args", planner_args_template]
     return run_planner(extend_args(planner_args, timeout, suppress_planner_output))
 
 def extend_args(planner_args, timeout: Optional[int] = None, suppress_planner_output : Optional[bool] = True):
