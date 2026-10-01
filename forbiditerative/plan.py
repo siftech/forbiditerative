@@ -7,6 +7,11 @@ import sys
 from pathlib import Path
 # from driver import limits, arguments
 
+# Ensure the source tree's root is at the front of sys.path so that
+# `import forbiditerative` resolves to the source, not a stale installed
+# copy, regardless of the caller's working directory.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 from subprocess import SubprocessError
 import logging
 
